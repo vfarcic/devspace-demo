@@ -31,7 +31,7 @@ disqusShortname = ""
 
   # Navigation Section
   [params.navigation]
-    title = "The DevOps Toolkit!!!"
+    title = "The DevOps Toolkit"
     subtitle = "By Viktor Farcic"
     menu = "Menu"
     # Optional logo as brand stored in img/
