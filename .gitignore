@@ -1,4 +1,3 @@
-
-
+devspace.yaml
 # Ignore DevSpace cache and log folder
 .devspace/
