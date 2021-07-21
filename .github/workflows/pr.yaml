@@ -33,7 +33,8 @@ jobs:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
     - name: Create a cluster
       run: |
-        kubectl get namespaces
+        curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
+        ./vcluster list
       # uses: wahyd4/kubectl-helm-action@master
       # env:
       #   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
