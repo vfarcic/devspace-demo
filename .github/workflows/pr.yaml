@@ -26,12 +26,35 @@ jobs:
         push: true
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
-    - name: Create a cluster
-      uses: addnab/docker-run-action@v3
+    - name: Setup Kube config
+      uses: azure/k8s-set-context@v1
       with:
-        image: efrecon/vcluster:v0.3.0
-        args: >-
-          create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+    - name: Create a cluster
+      run: |
+        # Install vCluster
+        curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
+        sudo mv vcluster /usr/local/bin;
+
+        kubectl get namespaces
+
+        # Create a cluster
+        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
+        vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        export KUBECONFIG=./kubeconfig.yaml
+        kubectl get namespaces
+      # uses: wahyd4/kubectl-helm-action@master
+      # env:
+      #   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      # with:
+      #   args: kubectl get namespaces
+    # - name: Create a cluster
+    #   uses: addnab/docker-run-action@v3
+    #   with:
+    #     image: efrecon/vcluster:v0.3.0
+    #     run: |
+    #       vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
     # - name: Deploy the app
     #   run: |
     #     cd kustomize/overlays/preview
