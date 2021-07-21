@@ -40,10 +40,8 @@ jobs:
         kubectl get namespaces
 
         # Create a cluster
-        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
-        echo "111"
-        vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs &
-        echo "222"
+        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
+        vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
         export KUBECONFIG=./kubeconfig.yaml
         kubectl get namespaces
       # uses: wahyd4/kubectl-helm-action@master
