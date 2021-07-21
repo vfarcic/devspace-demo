@@ -30,7 +30,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: efrecon/vcluster:v0.3.0
-        args: >-
+        run: |
           create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
     # - name: Deploy the app
     #   run: |
