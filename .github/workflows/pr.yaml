@@ -31,7 +31,7 @@ jobs:
       with:
         image: efrecon/vcluster:v0.3.0
         run: |
-          create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+          vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
     # - name: Deploy the app
     #   run: |
     #     cd kustomize/overlays/preview
