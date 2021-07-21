@@ -42,9 +42,10 @@ jobs:
 
         # Install vCluster
         curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
+        sudo mv vcluster /usr/local/bin;
 
         # Create a cluster
-        ./vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
       # uses: wahyd4/kubectl-helm-action@master
       # env:
       #   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
