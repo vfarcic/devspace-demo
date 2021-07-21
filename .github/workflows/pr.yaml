@@ -27,11 +27,13 @@ jobs:
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
     - name: Create a cluster
-      uses: wahyd4/kubectl-helm-action@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      with:
-        args: kubectl get namespaces
+      run: |
+        kubectl get namespaces
+      # uses: wahyd4/kubectl-helm-action@master
+      # env:
+      #   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      # with:
+      #   args: kubectl get namespaces
     # - name: Create a cluster
     #   uses: addnab/docker-run-action@v3
     #   with:
