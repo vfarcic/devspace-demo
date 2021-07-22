@@ -31,36 +31,22 @@ jobs:
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
-    - name: Create a cluster
+    - name: Deploy preview
       run: |
         # Install vCluster
         curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
         sudo mv vcluster /usr/local/bin;
 
-        kubectl get namespaces
-
         # Create a cluster
         vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
         vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
-        export KUBECONFIG=./kubeconfig.yaml
-        kubectl get namespaces
-      # uses: wahyd4/kubectl-helm-action@master
-      # env:
-      #   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      # with:
-      #   args: kubectl get namespaces
-    # - name: Create a cluster
-    #   uses: addnab/docker-run-action@v3
-    #   with:
-    #     image: efrecon/vcluster:v0.3.0
-    #     run: |
-    #       vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
-    # - name: Deploy the app
-    #   run: |
-    #     cd kustomize/overlays/preview
-    #     kustomize edit set image ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo=${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo:pr-${{ github.event.pull_request.number }}
-    #     kustomize build | kubectl apply --filename -
-    #     kubectl rollout status deployment github-actions-demo
-    # - name: Test
-    #   run: |
-    #     kubectl run test --image alpine -i --restart Never -- sh -c "apk add --update curl && curl github-actions-demo"
+        export KUBECONFIG=$PWD/kubeconfig.yaml
+
+        # Deploy
+        cd kustomize/overlays/preview
+        kustomize edit set image vfarcic/devops-toolkit=${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
+        kustomize build | kubectl apply --filename -
+        kubectl rollout status deployment devops-toolkit
+    - name: Test
+      run: |
+        echo "I was to lazy to write tests"
