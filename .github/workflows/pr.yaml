@@ -44,9 +44,18 @@ jobs:
         echo "111"
         cat kubeconfig.yaml
 
-        export KUBECONFIG=./kubeconfig.yaml
+        export KUBECONFIG=$PWD/kubeconfig.yaml
+
+        echo "222"
+
         cd kustomize/overlays/preview
+
+        echo "333"
+
         kustomize edit set image vfarcic/devops-toolkit=${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
+
+        echo "444"
+        
         kustomize build | kubectl apply --filename -
         kubectl rollout status deployment github-actions-demo
       # uses: wahyd4/kubectl-helm-action@master
