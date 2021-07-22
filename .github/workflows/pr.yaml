@@ -41,7 +41,7 @@ jobs:
         vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
         vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
 
-        cat "111"
+        echo "111"
         cat kubeconfig.yaml
 
         export KUBECONFIG=./kubeconfig.yaml
