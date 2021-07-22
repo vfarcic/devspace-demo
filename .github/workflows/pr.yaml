@@ -31,7 +31,7 @@ jobs:
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
-    - name: Create a cluster
+    - name: Deploy preview
       run: |
         # Install vCluster
         curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
@@ -40,6 +40,10 @@ jobs:
         # Create a cluster
         vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
         vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+
+        cat "111"
+        cat kubeconfig.yaml
+
         export KUBECONFIG=./kubeconfig.yaml
         cd kustomize/overlays/preview
         kustomize edit set image vfarcic/devops-toolkit=${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
